@@ -1,11 +1,12 @@
 class Ball {
     constructor(x, y, lines) {
-        this.centerPoint = board.create('point', [x, y]); //center of vall
-        this.circle = board.create('circle', [this.centerPoint, 2]); // ball drawing
+        this.centerPoint = board.create('point', [x, y], { visible: false }); //center of ball
+        this.circle = board.create('circle', [this.centerPoint, 1.5], { strokeWidth: 4, strokeColor: '#d9d9d9', fillColor: '#f2f2f2' }); // ball drawing
 
         this.acceleration = { x: 0, y: 0 } // acceleration vector
         this.velocity = { x: 0, y: 0 } // velocity vector 
         this.groundLines = lines;
+        this.animationActive = false;
     }
 
     applyForce(force) {
@@ -14,8 +15,6 @@ class Ball {
     }
 
     update(slope) {
-      //  this.applyForce({ x: -0.081 * slope, y: -0.081 }); // apply gravity
-
         this.velocity.x += this.acceleration.x;
         this.velocity.y += this.acceleration.y;
 
@@ -24,7 +23,6 @@ class Ball {
 
         let x = this.centerPoint.X() + this.velocity.x;
         let y = this.centerPoint.Y() + this.velocity.y;
-
 
         y = this.getYBound(x, y);
         return [x, y]
@@ -60,6 +58,7 @@ class Ball {
                 return line;
             }
         }
+        this.stop();
         return NaN;
     }
 
@@ -70,25 +69,29 @@ class Ball {
         return false;
     }
 
-    start() {
-        this.centerPoint.moveAlong(this.movingFunction, 1000);
+    start(velocity) {
+        resetPlots();
+        this.animationActive = true;
+        this.velocity.x = velocity; 
+        this.centerPoint.moveAlong(this.movingFunction, 12000, { callback: animationFinished });
+    }
+    stop() {
+        this.animationActive = false;
     }
 
+
     movingFunction(x) {
-        if (x > 12000) return NaN;
+        if (x > 12000 || !ball.animationActive) return NaN;
 
         let slope = ball.getSlope();
         ball.applyForce({ x: -0.081 * slope, y: -0.081 }); // apply gravity
-
         ball.plotData(x);
         let newPos = ball.update(); //get updated motion
-        
+
         return newPos;
     }
 
-    plotData(time) {   
-        console.log(this.centerPoint.X());
-         
+    plotData(time) {
         updatePlot(time, this.centerPoint.X(), this.velocity.x, this.acceleration.x)
     }
 }
