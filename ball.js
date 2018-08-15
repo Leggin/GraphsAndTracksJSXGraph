@@ -14,7 +14,7 @@ class Ball {
     }
 
     update(slope) {
-        this.applyForce({ x: -0.081 * slope, y: -0.081 }); // apply gravity
+      //  this.applyForce({ x: -0.081 * slope, y: -0.081 }); // apply gravity
 
         this.velocity.x += this.acceleration.x;
         this.velocity.y += this.acceleration.y;
@@ -25,31 +25,25 @@ class Ball {
         let x = this.centerPoint.X() + this.velocity.x;
         let y = this.centerPoint.Y() + this.velocity.y;
 
-        let newPos = this.setAboveGround(x, y);
-       // x = newPos[0];
-        y = newPos[1];
+
+        y = this.getYBound(x, y);
         return [x, y]
     }
 
-    setAboveGround(x, y) {
+    getYBound(x, y) {
         let line = this.getCurrentLine();
-        let newx = x;
         let newy = y;
         if (line) {
-            let normal = board.create('normal', [line, [x,this.centerPoint.Y()]], { visible: true });
-            let normalP = board.create('intersection', [line, normal], { visible: true });
+            let vertical = board.create('line', [[x, y + 20], [x, y]], { visible: true });
+            let verticalP = board.create('intersection', [line, vertical], { visible: true });
 
-            if (y - this.circle.Radius() < normalP.Y()) {
-                newx = normalP.X() + this.circle.Radius()// Math.cos(line.getAngle());
-                newy = normalP.Y() + this.circle.Radius()// Math.sin(line.getAngle());
-                this.velocity.y = -0.081;
+            if (y - this.circle.Radius() < verticalP.Y()) {
+                newy = verticalP.Y() + this.circle.Radius() + Math.abs(Math.sin(line.getAngle())) * (this.circle.Radius() / Math.PI);
             }
-            board.removeObject(normal);
-            board.removeObject(normalP);
-            console.log(newx,newy);
-            
+            board.removeObject(vertical);
+            board.removeObject(verticalP);
         }
-        return [newx, newy];
+        return newy;
     }
 
     getSlope() {
@@ -77,13 +71,24 @@ class Ball {
     }
 
     start() {
-        this.centerPoint.moveAlong(this.movingFunction, 10);
+        this.centerPoint.moveAlong(this.movingFunction, 1000);
     }
 
     movingFunction(x) {
         if (x > 12000) return NaN;
 
         let slope = ball.getSlope();
-        return ball.update(slope);
+        ball.applyForce({ x: -0.081 * slope, y: -0.081 }); // apply gravity
+
+        ball.plotData(x);
+        let newPos = ball.update(); //get updated motion
+        
+        return newPos;
+    }
+
+    plotData(time) {   
+        console.log(this.centerPoint.X());
+         
+        updatePlot(time, this.centerPoint.X(), this.velocity.x, this.acceleration.x)
     }
 }
