@@ -13,7 +13,7 @@ var sliderStartAnimation = board.create('slider', [[-5, 20], [5, 20], [-1, 0, 1]
 board.create('text', [3, 18, 'start'], { strokeOpacity: 0.5, fontSize: 20, fixed: true, strokeColor: '#cccccc' });
 board.create('text', [-7, 18, 'stop'], { strokeOpacity: 0.5, fontSize: 20, fixed: true, strokeColor: '#cccccc' });
 
-// controll start an stop of animation with slider values
+// controll start and stop of animation with slider values
 var startPoint = board.create('point', [
     () => {
         if (sliderStartAnimation.Value() == 1) {
@@ -55,16 +55,15 @@ lines.push(board.create('line', [[startX + 80, function () { return slider5.Valu
 //init ball
 var ball = new Ball(startX + 5, 5, lines);
 
-//
+//slider for start velocity
 var sliderVelocity = board.create('slider', [[startX + 10, startY - 30], [startX + 90, startY - 30], [-1, 0, 1]], { suffixLabel: 'start velocity = ', size: 8, strokeWidth: 3, strokeColor: '#737373', highlightStrokeColor: '#d9d9d9', highlightFillColor: '#d9d9d9' });
-
 
 function startAnimation() {
     animationActive = true;
     ball.start(sliderVelocity.Value()); // start ball animation
 }
 function stopAnimation() {
-    animationActive = false;
+    animationFinished()
     ball.stop(); // start ball animation
 }
 

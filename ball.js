@@ -73,7 +73,7 @@ class Ball {
         resetPlots();
         this.animationActive = true;
         this.velocity.x = velocity; 
-        this.centerPoint.moveAlong(this.movingFunction, 12000, { callback: animationFinished });
+        this.centerPoint.moveAlong(this.movingFunction, 0, { callback: animationFinished });
     }
     stop() {
         this.animationActive = false;
