@@ -17,7 +17,7 @@ class PlotPhysics {
         this.prevPoint = p;
     }
 
-    fullReset(name, text, bounds, backColor, strokeColor) {
+    reset(name, text, bounds, backColor, strokeColor) {
         this.physicsBoard = JXG.JSXGraph.initBoard(name, { boundingbox: bounds, axis: true, keepaspectratio: false });
         this.prevPoint = this.physicsBoard.create('point', [0, 0], { visible: false });
         this.strokeColor = strokeColor;
@@ -26,7 +26,7 @@ class PlotPhysics {
         nameText.setPosition(JXG.COORDS_BY_SCREEN, [10, 100, 70]);
     }
 
-    reset(){
+    singleReset(){
         for (let point of this.pointList) {
             this.physicsBoard.removeObject(point);
         }
@@ -47,9 +47,7 @@ function updatePlot(time, pos, vel, acc) {
 
 }
 
-function resetPlots() { 
-    
-  
+function resetPlots() {  
      positionPlotBoard.reset('jxgposplot', "Position", [-1.5, 110, 13.0, -15], '#fff2e6', '#ff7b00');
     velocityPlotBoard.reset('jxgvelplot', "Velocity", [-1.5, 4.0, 13.0, -4.0], '#e6ffee', '#00cc44');
     accelerationPlotBoard.reset('jxgaccplot', "Acceleration", [-1.5, 0.08, 13.0, -0.08], '#e6f4ff', '#0068b3');
