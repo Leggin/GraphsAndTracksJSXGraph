@@ -6,7 +6,7 @@ const sliderMax = 8;
 var animationActive = false;
 
 // init board
-var board = JXG.JSXGraph.initBoard('jxgbox', { boundingbox: [-10, 25, 10, -35], keepaspectratio: true, axis: false });
+var board = JXG.JSXGraph.initBoard('jxgbox', { boundingbox: [-10, 25, 10, -35], keepaspectratio: true, axis: false});
 
 //animation start slider
 var sliderStartAnimation = board.create('slider', [[-5, 20], [5, 20], [-1, 0, 1]], { snapWidth: 1, withLabel: false, size: 14, strokeWidth: 4, strokeColor: '#ff9999', highlightStrokeColor: '#ff9999', highlightFillColor: '#ffe6e6' });
@@ -36,12 +36,12 @@ var startPoint = board.create('point', [
 
 
 // init sliders for plane heights
-var slider1 = board.create('slider', [[startX, -10], [startX, -20], [sliderMax, 0, sliderMin]], sliderProperties);
-var slider2 = board.create('slider', [[startX + 20, -10], [startX + 20, -20], [sliderMax, 0, sliderMin]], sliderProperties);
-var slider3 = board.create('slider', [[startX + 40, -10], [startX + 40, -20], [sliderMax, 0, sliderMin]], sliderProperties);
+var slider1 = board.create('slider', [[startX, -10], [startX, -20], [sliderMax, 8, sliderMin]], sliderProperties);
+var slider2 = board.create('slider', [[startX + 20, -10], [startX + 20, -20], [sliderMax, -8, sliderMin]], sliderProperties);
+var slider3 = board.create('slider', [[startX + 40, -10], [startX + 40, -20], [sliderMax, -8, sliderMin]], sliderProperties);
 var slider4 = board.create('slider', [[startX + 60, -10], [startX + 60, -20], [sliderMax, 0, sliderMin]], sliderProperties);
 var slider5 = board.create('slider', [[startX + 80, -10], [startX + 80, -20], [sliderMax, 0, sliderMin]], sliderProperties);
-var slider6 = board.create('slider', [[startX + 100, -10], [startX + 100, -20], [sliderMax, 0, sliderMin]], sliderProperties);
+var slider6 = board.create('slider', [[startX + 100, -10], [startX + 100, -20], [sliderMax, 8, sliderMin]], sliderProperties);
 
 // init of planes
 var lines = [];

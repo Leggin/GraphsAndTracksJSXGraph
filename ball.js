@@ -7,6 +7,15 @@ class Ball {
         this.velocity = { x: 0, y: 0 } // velocity vector 
         this.groundLines = lines;
         this.animationActive = false;
+
+        this.vp1 = board.create('point', [x, y], { visible: false });
+        this.vp2 = board.create('point', [x, 20], { visible: false });
+        this.lp1 = board.create('point', [0, 0], { visible: false });
+        this.lp2 = board.create('point', [21, 0], { visible: false });
+
+        this.vertical = board.create('line', [this.vp1, this.vp2], { visible: false });
+        this.line = board.create('line', [this.lp1, this.lp2], { visible: false });
+        this.verticalP = board.create('intersection', [this.line, this.vertical], { visible: false });
     }
 
     applyForce(force) {
@@ -29,17 +38,23 @@ class Ball {
     }
 
     getYBound(x, y) {
-        let line = this.getCurrentLine();
-        let newy = y;
-        if (line) {
-            let vertical = board.create('line', [[x, y + 20], [x, y]], { visible: true });
-            let verticalP = board.create('intersection', [line, vertical], { visible: true });
+        let currentLine = this.getCurrentLine();
 
-            if (y - this.circle.Radius() < verticalP.Y()) {
-                newy = verticalP.Y() + this.circle.Radius() + Math.abs(Math.sin(line.getAngle())) * (this.circle.Radius() / Math.PI);
+
+        let newy = y;
+
+        if (currentLine) {
+            this.lp1.setPosition(JXG.COORDS_BY_USER, [currentLine.point1.X(), currentLine.point1.Y()]);
+            this.lp2.setPosition(JXG.COORDS_BY_USER, [currentLine.point2.X(), currentLine.point2.Y()]);
+            this.vp1.setPosition(JXG.COORDS_BY_USER, [x, y + 20]);
+            this.vp2.setPosition(JXG.COORDS_BY_USER, [x, y]);
+
+            if (y - this.circle.Radius() < this.verticalP.Y()) {
+                newy = this.verticalP.Y() + this.circle.Radius() + Math.abs(Math.sin(this.line.getAngle())) * (this.circle.Radius()*this.circle.Radius() / Math.PI);
+                this.velocity.y = -0.0981;
             }
-            board.removeObject(vertical);
-            board.removeObject(verticalP);
+            //board.removeObject(vertical);
+            //board.removeObject(verticalP);
         }
         return newy;
     }
@@ -72,7 +87,7 @@ class Ball {
     start(velocity) {
         resetPlots();
         this.animationActive = true;
-        this.velocity.x = velocity; 
+        this.velocity.x = velocity;
         this.centerPoint.moveAlong(this.movingFunction, 0, { callback: animationFinished });
     }
     stop() {
@@ -84,7 +99,7 @@ class Ball {
         if (x > 12000 || !ball.animationActive) return NaN;
 
         let slope = ball.getSlope();
-        ball.applyForce({ x: -0.081 * slope, y: -0.081 }); // apply gravity
+        ball.applyForce({ x: -0.0981 * slope, y: -0.0981 }); // apply gravity
         ball.plotData(x);
         let newPos = ball.update(); //get updated motion
 
