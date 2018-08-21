@@ -24,6 +24,8 @@ class Ball {
     }
 
     update(slope) {
+        if (this.getCurrentLine() == NaN) return NaN;
+        
         this.velocity.x += this.acceleration.x;
         this.velocity.y += this.acceleration.y;
 
@@ -33,14 +35,13 @@ class Ball {
         let x = this.centerPoint.X() + this.velocity.x;
         let y = this.centerPoint.Y() + this.velocity.y;
 
-        y = this.getYBound(x, y);
+        y = this.getYBound(x + this.velocity.x, y);
         return [x, y]
     }
 
+    //get y value for new ball position if ball is below current line
     getYBound(x, y) {
         let currentLine = this.getCurrentLine();
-
-
         let newy = y;
 
         if (currentLine) {
@@ -49,16 +50,16 @@ class Ball {
             this.vp1.setPosition(JXG.COORDS_BY_USER, [x, y + 20]);
             this.vp2.setPosition(JXG.COORDS_BY_USER, [x, y]);
 
-            if (y - this.circle.Radius() < this.verticalP.Y()) {
-                newy = this.verticalP.Y() + this.circle.Radius() + Math.abs(Math.sin(this.line.getAngle())) * (this.circle.Radius()*this.circle.Radius() / Math.PI);
-                this.velocity.y = -0.0981;
+            let yTemp = this.verticalP.Y() + this.circle.Radius() + ((this.circle.Radius() / Math.abs(Math.cos(this.line.getAngle()))) - this.circle.Radius())
+            if (y < yTemp) {
+                this.velocity.y = -0.981;
+                newy = yTemp;
             }
-            //board.removeObject(vertical);
-            //board.removeObject(verticalP);
         }
         return newy;
     }
 
+    //return the angle of the current line
     getSlope() {
         let currentLine = this.getCurrentLine();
         if (currentLine) {
@@ -67,6 +68,7 @@ class Ball {
         return 1;
     }
 
+    //return the line where the ball currently is
     getCurrentLine() {
         for (let line of this.groundLines) {
             if (this.isCurrentlyAbove(line)) {
@@ -77,6 +79,7 @@ class Ball {
         return NaN;
     }
 
+    //check if the ball is over or under line
     isCurrentlyAbove(line) {
         if (line.point1.X() < this.centerPoint.X() && line.point2.X() > this.centerPoint.X()) {
             return true;
@@ -84,12 +87,15 @@ class Ball {
         return false;
     }
 
+    //start animation
     start(velocity) {
         resetPlots();
         this.animationActive = true;
         this.velocity.x = velocity;
         this.centerPoint.moveAlong(this.movingFunction, 0, { callback: animationFinished });
     }
+
+    //stop animation
     stop() {
         this.animationActive = false;
     }
