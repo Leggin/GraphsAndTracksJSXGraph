@@ -6,10 +6,19 @@ const sliderMax = 8;
 var animationActive = false;
 
 // init board
-var board = JXG.JSXGraph.initBoard('jxgbox', { boundingbox: [-10, 25, 10, -35], keepaspectratio: true, axis: false});
+var board = JXG.JSXGraph.initBoard('jxgbox', { boundingbox: [-10, 25, 10, -35], keepaspectratio: true, axis: false });
 
 //animation start slider
-var sliderStartAnimation = board.create('slider', [[-5, 20], [5, 20], [-1, 0, 1]], { snapWidth: 1, withLabel: false, size: 14, strokeWidth: 4, strokeColor: '#ff9999', highlightStrokeColor: '#ff9999', highlightFillColor: '#ffe6e6' });
+var sliderStartAnimation = board.create('slider', [[-5, 20], [5, 20], [-1, 0, 1]], {
+    snapWidth: 1, withLabel: false, size: 14, strokeWidth: 4, strokeColor: '#ff9999', highlightStrokeColor: '#ff9999', highlightFillColor: '#ffe6e6', baseline: {
+        strokeColor: '#4d4d4d',
+        fillColor: '#d9d9d9'
+    },
+    highline: {
+        strokeColor: '#666666',
+        fillColor: '#d9d9d9'
+    }
+});
 board.create('text', [3, 18, 'start'], { strokeOpacity: 0.5, fontSize: 20, fixed: true, strokeColor: '#cccccc' });
 board.create('text', [-7, 18, 'stop'], { strokeOpacity: 0.5, fontSize: 20, fixed: true, strokeColor: '#cccccc' });
 
@@ -56,7 +65,16 @@ lines.push(board.create('line', [[startX + 80, function () { return slider5.Valu
 var ball = new Ball(startX + 5, 5, lines);
 
 //slider for start velocity
-var sliderVelocity = board.create('slider', [[startX + 10, startY - 30], [startX + 90, startY - 30], [-1, 0, 1]], { suffixLabel: 'start velocity = ', size: 8, strokeWidth: 3, strokeColor: '#737373', highlightStrokeColor: '#d9d9d9', highlightFillColor: '#d9d9d9' });
+var sliderVelocity = board.create('slider', [[startX + 10, startY - 30], [startX + 90, startY - 30], [-1, 0, 1]], {
+    suffixLabel: 'start velocity = ', size: 14, baseline: {
+        strokeColor: '#4d4d4d',
+        fillColor: '#d9d9d9'
+    },
+    highline: {
+        strokeColor: '#666666',
+        fillColor: '#d9d9d9'
+    }, strokeWidth: 3, strokeColor: '#737373', highlightStrokeColor: '#d9d9d9', highlightFillColor: '#d9d9d9'
+});
 
 function startAnimation() {
     animationActive = true;
