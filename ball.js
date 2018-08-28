@@ -113,6 +113,6 @@ class Ball {
     }
 
     plotData(time) {
-        updatePlot(time, this.centerPoint.X(), this.velocity.x, this.acceleration.x)
+        updatePlot(time, this.centerPoint.X(), this.velocity.x, this.acceleration.x);
     }
 }
