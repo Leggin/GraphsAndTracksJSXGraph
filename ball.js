@@ -1,7 +1,7 @@
 class Ball {
     constructor(x, y, lines) {
         this.centerPoint = board.create('point', [x, y], { visible: false }); //center of ball
-        this.circle = board.create('circle', [this.centerPoint, 1.5], { strokeWidth: 4, strokeColor: '#d9d9d9', fillColor: '#f2f2f2' }); // ball drawing
+        this.circle = board.create('circle', [this.centerPoint, 1.5], { strokeWidth: 4, strokeColor: '#80b3ff', fillColor: '#b3d1ff' }); // ball drawing
 
         this.acceleration = { x: 0, y: 0 } // acceleration vector
         this.velocity = { x: 0, y: 0 } // velocity vector 
@@ -25,7 +25,7 @@ class Ball {
 
     update(slope) {
         if (this.getCurrentLine() == NaN) return NaN;
-        
+
         this.velocity.x += this.acceleration.x;
         this.velocity.y += this.acceleration.y;
 
@@ -39,10 +39,10 @@ class Ball {
         return [x, y]
     }
 
-    //get y value for new ball position if ball is below current line
+    // get y value for new ball position if ball is below current line
     getYBound(x, y) {
         let currentLine = this.getCurrentLine();
-        let newy = y;
+        let newY = y;
 
         if (currentLine) {
             this.lp1.setPosition(JXG.COORDS_BY_USER, [currentLine.point1.X(), currentLine.point1.Y()]);
@@ -53,13 +53,13 @@ class Ball {
             let yTemp = this.verticalP.Y() + this.circle.Radius() + ((this.circle.Radius() / Math.abs(Math.cos(this.line.getAngle()))) - this.circle.Radius())
             if (y < yTemp) {
                 this.velocity.y = -0.981;
-                newy = yTemp;
+                newY = yTemp;
             }
         }
-        return newy;
+        return newY;
     }
 
-    //return the angle of the current line
+    // return the angle of the current line
     getSlope() {
         let currentLine = this.getCurrentLine();
         if (currentLine) {
@@ -68,7 +68,7 @@ class Ball {
         return 1;
     }
 
-    //return the line where the ball currently is
+    // return the line where the ball currently is
     getCurrentLine() {
         for (let line of this.groundLines) {
             if (this.isCurrentlyAbove(line)) {
@@ -79,7 +79,7 @@ class Ball {
         return NaN;
     }
 
-    //check if the ball is over or under line
+    // check if the ball is over or under line
     isCurrentlyAbove(line) {
         if (line.point1.X() < this.centerPoint.X() && line.point2.X() > this.centerPoint.X()) {
             return true;
@@ -87,7 +87,7 @@ class Ball {
         return false;
     }
 
-    //start animation
+    // start animation
     start(velocity) {
         resetPlots();
         this.animationActive = true;
@@ -95,7 +95,7 @@ class Ball {
         this.centerPoint.moveAlong(this.movingFunction, 0, { callback: animationFinished });
     }
 
-    //stop animation
+    // stop animation
     stop() {
         this.animationActive = false;
     }
@@ -114,5 +114,12 @@ class Ball {
 
     plotData(time) {
         updatePlot(time, this.centerPoint.X(), this.velocity.x, this.acceleration.x);
+    }
+
+    // position set by the slider
+    setXPosition(newX) {
+        this.centerPoint.setPosition(JXG.COORDS_BY_USER, [newX, -200]);
+        let newY = this.getYBound(this.centerPoint.X(), this.centerPoint.Y());
+        this.centerPoint.setPosition(JXG.COORDS_BY_USER, [newX, newY]);
     }
 }
