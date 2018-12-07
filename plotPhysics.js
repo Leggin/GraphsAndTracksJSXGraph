@@ -25,7 +25,7 @@ var positionPlotBoard = new PlotPhysics('jxgposplot', "X-Position", [-1.5, 110, 
 var velocityPlotBoard = new PlotPhysics('jxgvelplot', "Velocity", [-1.5, 4.0, 13.0, -4.0], '#e6ffee', '#00cc44');
 var accelerationPlotBoard = new PlotPhysics('jxgaccplot', "Acceleration", [-1.5, 0.08, 13.0, -0.08], '#e6f4ff', '#0068b3');
 
-function updatePlot(time, pos, vel, acc) {
+function updatePlot(time, pos, vel, acc, ypos, yacc, yvel) {
     positionPlotBoard.plot(time, pos);
     velocityPlotBoard.plot(time, vel);
     accelerationPlotBoard.plot(time, acc);

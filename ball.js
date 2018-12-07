@@ -47,15 +47,20 @@ class Ball {
         if (currentLine) {
             this.lp1.setPosition(JXG.COORDS_BY_USER, [currentLine.point1.X(), currentLine.point1.Y()]);
             this.lp2.setPosition(JXG.COORDS_BY_USER, [currentLine.point2.X(), currentLine.point2.Y()]);
-            this.vp1.setPosition(JXG.COORDS_BY_USER, [x, y + 20]);
+            this.vp1.setPosition(JXG.COORDS_BY_USER, [x, y + 200]);
             this.vp2.setPosition(JXG.COORDS_BY_USER, [x, y]);
 
-            let yTemp = this.verticalP.Y() + this.circle.Radius() + ((this.circle.Radius() / Math.abs(Math.cos(this.line.getAngle()))) - this.circle.Radius())
+            let alpha = ((this.circle.Radius() / Math.abs(Math.cos(this.line.getAngle()))) - this.circle.Radius());
+
+            let yTemp = this.verticalP.Y() + this.circle.Radius() + alpha;
             if (y < yTemp) {
-                this.velocity.y = -0.981;
+
                 newY = yTemp;
             }
         }
+
+
+        this.velocity.y = 0;
         return newY;
     }
 
@@ -81,7 +86,7 @@ class Ball {
 
     // check if the ball is over or under line
     isCurrentlyAbove(line) {
-        if (line.point1.X() < this.centerPoint.X() && line.point2.X() > this.centerPoint.X()) {
+        if (line.point1.X() <= this.centerPoint.X() && line.point2.X() >= this.centerPoint.X()) {
             return true;
         }
         return false;
@@ -105,7 +110,10 @@ class Ball {
         if (x > 12000 || !ball.animationActive) return NaN;
 
         let slope = ball.getSlope();
-        ball.applyForce({ x: -0.0981 * slope, y: -0.0981 }); // apply gravity
+        ball.applyForce({ x: 0, y: -0.981 }); // apply gravity
+        let downhillForce = -0.0981 * slope;
+
+        ball.applyForce({ x: downhillForce, y: 0 }); // apply Downhill force
         ball.plotData(x);
         let newPos = ball.update(); //get updated motion
 
@@ -113,7 +121,8 @@ class Ball {
     }
 
     plotData(time) {
-        updatePlot(time, this.centerPoint.X(), this.velocity.x, this.acceleration.x);
+
+        updatePlot(time, this.centerPoint.X(), this.velocity.x, this.acceleration.x, this.centerPoint.Y(), this.acceleration.y, this.velocity.y);
     }
 
     // position set by the slider
@@ -122,4 +131,23 @@ class Ball {
         let newY = this.getYBound(this.centerPoint.X(), this.centerPoint.Y());
         this.centerPoint.setPosition(JXG.COORDS_BY_USER, [newX, newY]);
     }
+}
+
+function round(value, exp) {
+    if (typeof exp === 'undefined' || +exp === 0)
+        return Math.round(value);
+
+    value = +value;
+    exp = +exp;
+
+    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+        return NaN;
+
+    // Shift
+    value = value.toString().split('e');
+    value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+
+    // Shift back
+    value = value.toString().split('e');
+    return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
 }
