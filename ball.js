@@ -19,12 +19,15 @@ class Ball {
     }
 
     applyForce(force) {
+        if (this.getCurrentLine() === null) {
+            return;
+        };
         this.acceleration.x += force.x;
         this.acceleration.y += force.y;
     }
 
     update(slope) {
-        if (this.getCurrentLine() == NaN) return NaN;
+        if (this.getCurrentLine() === null) return NaN;
 
         this.velocity.x += this.acceleration.x;
         this.velocity.y += this.acceleration.y;
@@ -81,7 +84,7 @@ class Ball {
             }
         }
         this.stop();
-        return NaN;
+        return null;
     }
 
     // check if the ball is over or under line

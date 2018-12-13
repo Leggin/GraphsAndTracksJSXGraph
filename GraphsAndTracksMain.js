@@ -6,7 +6,7 @@ const sliderMax = 8;
 var animationActive = false;
 
 // init board
-var board = JXG.JSXGraph.initBoard('jxgbox', { boundingbox: [-10, 25, 10, -35], keepaspectratio: true, axis: false });
+var board = JXG.JSXGraph.initBoard('jxgbox', { boundingbox: [-10, 25, 10, -35], keepaspectratio: true, axis: false, showNavigation: false, showCopyright: false, });
 
 //---animation start slider --------------------------------------
 var sliderStartAnimation = board.create('slider', [[-5 + startX, 28 + startY], [5 + startX, 28 + startY], [-1, 0, 1]], {
@@ -45,8 +45,8 @@ var startAnimationPoint = board.create('point', [
 // ------------------------------------------------------------------
 
 // --- position slider ----------------------------------------------
-var sliderBallPosition = board.create('slider', [[0.5+startX, 20 + startY], [99.5 + startX, 20 + startY], [0.5, 0, 99.5]], {
-    withLabel: false, size: 14, strokeWidth: 4, strokeColor: '#b3d1ff', fillColor:'#cce0ff',baseline: {
+var sliderBallPosition = board.create('slider', [[0.5 + startX, 20 + startY], [99.5 + startX, 20 + startY], [0.5, 0, 99.5]], {
+    withLabel: false, size: 14, strokeWidth: 4, strokeColor: '#b3d1ff', fillColor: '#cce0ff', baseline: {
         strokeColor: '#4d4d4d',
         fillColor: '#d9d9d9'
     },
