@@ -16,6 +16,7 @@ class Ball {
         this.vertical = board.create('line', [this.vp1, this.vp2], { visible: false });
         this.line = board.create('line', [this.lp1, this.lp2], { visible: false });
         this.verticalP = board.create('intersection', [this.line, this.vertical], { visible: false });
+        this.movingFunction = this.movingFunction.bind(this);
     }
 
     applyForce(force) {
@@ -61,8 +62,6 @@ class Ball {
                 newY = yTemp;
             }
         }
-
-
         this.velocity.y = 0;
         return newY;
     }
@@ -108,23 +107,21 @@ class Ball {
         this.animationActive = false;
     }
 
-
     movingFunction(x) {
-        if (x > 12000 || !ball.animationActive) return NaN;
-
-        let slope = ball.getSlope();
-        ball.applyForce({ x: 0, y: -0.981 }); // apply gravity
+        if (x > 12000 || !this.animationActive) return NaN;
+        if(this.getCurrentLine() === null) return NaN;
+        let slope = this.getSlope();
+        this.applyForce({ x: 0, y: -0.981 }); // apply gravity
         let downhillForce = -0.0981 * slope;
 
-        ball.applyForce({ x: downhillForce, y: 0 }); // apply Downhill force
-        ball.plotData(x);
-        let newPos = ball.update(); //get updated motion
+        this.applyForce({ x: downhillForce, y: 0 }); // apply Downhill force
+        this.plotData(x);
+        let newPos = this.update(); //get updated motion
 
         return newPos;
     }
 
     plotData(time) {
-
         updatePlot(time, this.centerPoint.X(), this.velocity.x, this.acceleration.x, this.centerPoint.Y(), this.acceleration.y, this.velocity.y);
     }
 
